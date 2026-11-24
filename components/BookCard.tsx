@@ -28,7 +28,7 @@ export default function BookCard({ book }: BookCardProps) {
 
       {book.isNew && <span className="new-label">New addition</span>}
 
-      <p className="book-category">{book.category}</p>
+      <p className="book-category">{book.category.split("|").pop()?.trim()}</p>
       <h3>{book.title}</h3>
       <p className="muted">{book.author}</p>
       <p className="book-price">${book.price.toFixed(2)}</p>

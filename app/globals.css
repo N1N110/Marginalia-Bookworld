@@ -7,7 +7,7 @@
   --color-secondary: #916130;
   --color-text: #000000;
   --color-white: #ffffff;
-  --color-muted: #8c7b7d;
+  --color-muted: #6f5f61;
   --color-border: #e5d3d8;
   --font-heading: "Playfair Display", Georgia, serif;
   --font-body: "DM Sans", Arial, sans-serif;
@@ -18,7 +18,7 @@
 .product-loading {
   font-family: var(--font-body);
   font-size: 14px;
-  color: var(--muted);
+  color: var(--color-muted);
   text-align: center;
   padding: 40px 0;
 }
@@ -283,6 +283,7 @@ button {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0.5;
 }
 
 .hero::before {
@@ -306,7 +307,7 @@ button {
 }
 
 .hero {
-  color: #916130;
+  color: var(--color-secondary);
 }
 
 .hero h1 em {
@@ -365,23 +366,40 @@ button {
   font-size: 0.7rem;
 }
 
-.book-category {
+.book-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.book-card .book-category {
   margin-top: 12px;
   color: var(--color-secondary);
-  font-size: 0.75rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .book-card h3 {
   margin-bottom: 4px;
-  font-size: 1rem;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 500;
 }
 
 .book-card p {
   font-size: 0.85rem;
 }
 
-.book-price {
+.book-card .book-price {
+  margin: 8px 0 12px;
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
   font-weight: 700;
+}
+
+.book-card .text-link {
+  margin-top: auto;
 }
 
 .product-info {
@@ -389,7 +407,10 @@ button {
 }
 
 .product-price {
-  font-size: 1.4rem;
+  margin: 4px 0 16px;
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: 1.9rem;
   font-weight: 700;
 }
 
@@ -539,7 +560,7 @@ button {
 .product-image {
   display: block;
   width: 100%;
-  max-width: 420px;
+  max-width: 100%;
   aspect-ratio: 3 / 4;
   object-fit: contain;
   border-radius: var(--radius-card);
@@ -597,7 +618,7 @@ button {
 }
 
 .book-search button:hover {
-  background: var(--color-primary);
+  background: #650019;
 }
 
 .book-search button:focus-visible {
@@ -846,11 +867,6 @@ button {
 .checkout-fields input:focus,
 .checkout-fields textarea:focus {
   border-color: var(--color-primary);
-}
-
-.checkout-fields input[aria-invalid="true"],
-.checkout-fields textarea[aria-invalid="true"] {
-  border-color: #c0392b;
 }
 
 .checkout-options {
@@ -1227,7 +1243,7 @@ button {
 }
 
 /* =========================================================
-   14. RESPONSIVE DESIGN (AI Implemented).
+   12. RESPONSIVE DESIGN (AI Implemented).
 ========================================================= */
 
 /* TABLETS AND SMALLER LAPTOPS */

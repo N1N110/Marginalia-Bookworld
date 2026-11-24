@@ -45,22 +45,31 @@ async function ProductContent({
     <section className="section page-container product-layout">
 
       <div className="product-cover">
-      <img
-      src={book.image}
-      alt={`Cover of ${book.title}`}
-      className="product-image"
-      />
+        {book.image ? (
+          <img
+            src={book.image}
+            alt={`Cover of ${book.title}`}
+            className="product-image"
+          />
+        ) : (
+          <div className="book-cover-placeholder">
+            <span>{book.title}</span>
+          </div>
+        )}
       </div>
 
 
       <div className="product-info">
 
-        <p className="eyebrow">{book.category}</p>
+        <p className="eyebrow">{book.category.split("|").pop()?.trim()}</p>
         <h1 className="section-heading">{book.title}</h1>
         <p className="muted">By {book.author}</p>
         <p className="product-price">${book.price.toFixed(2)}</p>
         <p>{book.description}</p>
         <p className="muted">Availability: {book.availability}</p>
+
+        <AddToCartButton book={book}/>
+
 
   {book.specifications && (
     <div className="product-specifications">
@@ -75,8 +84,7 @@ async function ProductContent({
     </div>
   )}
 
-        <AddToCartButton book={book}/>
-        
+
 
         <p>
           <Link href="/shop" className="text-link">

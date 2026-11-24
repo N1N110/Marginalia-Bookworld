@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import BookCard from "../../components/BookCard";
 import { products } from "../../data/products";
 
@@ -8,10 +8,23 @@ export default function ShopPage() {
   const [maxPrice, setMaxPrice] = useState("All");
   const [selectedAvailability, setSelectedAvailability] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const clearFilters = () => {
+    setSelectedCategory("All");
+    setMaxPrice("All");
+    setSelectedAvailability("All");
+    setSearchQuery("");
+  };
 
   const filteredProducts = products.filter((book) => {
     const matchesCategory =
-      selectedCategory === "All" || book.category === selectedCategory;
+      selectedCategory === "All" ||
+      book.category === selectedCategory ||
+      (selectedCategory === "Young Adult (YA) Fiction" &&
+        book.category.startsWith("Young Adult (YA)"));
+
+    const query = searchQuery.trim().toLowerCase();
 
     const matchesPrice =
       maxPrice === "All" || book.price <= Number(maxPrice);
@@ -21,9 +34,9 @@ export default function ShopPage() {
       book.availability === selectedAvailability;
 
     const matchesSearch =
-      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      book.category.toLowerCase().includes(searchQuery.toLowerCase());
+      book.title.toLowerCase().includes(query) ||
+      book.author.toLowerCase().includes(query) ||
+      book.category.toLowerCase().includes(query);
 
     return (
       matchesSearch &&
@@ -46,6 +59,7 @@ export default function ShopPage() {
       <div className="book-search">
         <input
           id="search-filter"
+          ref={searchInputRef}
           type="search"
           aria-label="Search books, authors, and categories"
           placeholder="Search books, authors..."
@@ -53,7 +67,11 @@ export default function ShopPage() {
           onChange={(event) => setSearchQuery(event.target.value)}
         />
 
-        <button type="button" aria-label="Search">
+        <button
+          type="button"
+          aria-label="Search"
+          onClick={() => searchInputRef.current?.focus()}
+        >
           <svg
             viewBox="0 0 24 24"
             width="22"
@@ -79,12 +97,12 @@ export default function ShopPage() {
             value={selectedCategory}
             onChange={(event) => setSelectedCategory(event.target.value)}
           >
-            <option value="All">All Products</option>
+            <option value="All">All categories</option>
             <option value="New Adult Romance">
-             New Adult Romance
+              New Adult Romance
             </option>
             <option value="Young Adult (YA) Fiction">
-              Young Adult Fiction
+              All Young Adult
             </option>
             <option value="Young Adult (YA) | Contemporary Realistic Fiction">
               Contemporary Realistic Fiction
@@ -108,6 +126,7 @@ export default function ShopPage() {
 
         {/* Price Filter */}
         <div className="filter-group">
+          <label htmlFor="price-filter">Price:</label>
           <select
             id="price-filter"
             value={maxPrice}
@@ -124,6 +143,7 @@ export default function ShopPage() {
 
         {/* Availability Filter */}
         <div className="filter-group">
+          <label htmlFor="availability-filter">Availability:</label>
           <select
             id="availability-filter"
             value={selectedAvailability}
@@ -131,7 +151,7 @@ export default function ShopPage() {
               setSelectedAvailability(event.target.value)
             }
           >
-            <option value="All">All</option>
+            <option value="All">Any availability</option>
             <option value="In stock">In stock</option>
             <option value="Out of stock">Out of stock</option>
           </select>
@@ -146,9 +166,18 @@ export default function ShopPage() {
           ))}
         </div>
       ) : (
-        <p className="muted">
-          No products match your search. Try changing your search or filters.
-        </p>
+        <div className="empty-state">
+          <p className="muted">
+            No products match your search. Try changing your search or filters.
+          </p>
+          <button
+            type="button"
+            className="primary-button"
+            onClick={clearFilters}
+          >
+            Clear filters
+          </button>
+        </div>
       )}
     </section>
   );
