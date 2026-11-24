@@ -481,6 +481,240 @@ button {
   font-weight: 600;
 }
 
+/* ---- Sliding login / sign up card (components/AuthSlider.tsx) ---- */
+
+.auth-page--slider {
+  max-width: 920px;
+}
+
+.auth-card {
+  position: relative;
+  min-height: 620px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  background: var(--color-white);
+  box-shadow: 0 18px 50px rgba(128, 0, 32, 0.12);
+}
+
+/* Each form lives in its own half of the card */
+
+.auth-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 50%;
+  padding: 40px 48px;
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 350ms ease,
+    visibility 0s linear 350ms;
+}
+
+.auth-panel--login {
+  left: 0;
+}
+
+.auth-panel--signup {
+  right: 0;
+}
+
+.auth-panel.is-active {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 450ms ease 250ms,
+    visibility 0s;
+}
+
+.auth-panel .section-heading {
+  margin-bottom: 0;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+}
+
+.auth-panel .auth-form {
+  margin-block: 20px 0;
+}
+
+/* Burgundy panel that slides between the two halves */
+
+.auth-overlay {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 2;
+  width: 50%;
+  height: 100%;
+  background:
+    radial-gradient(
+      circle at 20% 15%,
+      rgba(217, 160, 168, 0.28),
+      transparent 55%
+    ),
+    linear-gradient(160deg, #800020, #5a0016);
+  color: var(--color-background);
+  transition: transform 650ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.auth-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 22px;
+  border: 1px solid rgba(250, 243, 241, 0.3);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.auth-card.is-signup .auth-overlay {
+  transform: translateX(-100%);
+}
+
+.auth-overlay-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 300ms ease,
+    visibility 0s linear 300ms;
+}
+
+.auth-overlay-content.is-active {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 450ms ease 250ms,
+    visibility 0s;
+}
+
+.auth-overlay-content h2 {
+  margin: 0 0 12px;
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  font-weight: 500;
+}
+
+.auth-overlay-text {
+  max-width: 28ch;
+  margin: 0 0 28px;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.auth-ghost-button {
+  padding: 12px 30px;
+  border: 1px solid var(--color-background);
+  border-radius: var(--radius-card);
+  background: transparent;
+  color: var(--color-background);
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.auth-ghost-button:hover {
+  background: var(--color-background);
+  color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.auth-ghost-button:focus-visible,
+.auth-text-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* Mobile-only text switch (hidden on desktop) */
+
+.auth-mobile-switch {
+  display: none;
+  margin: 0;
+  padding: 0 24px 28px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.auth-text-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+@keyframes auth-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Small screens: one form at a time, no sliding overlay */
+
+@media (max-width: 720px) {
+  .auth-card {
+    min-height: 0;
+  }
+
+  .auth-overlay {
+    display: none;
+  }
+
+  .auth-panel {
+    position: static;
+    display: none;
+    width: 100%;
+    padding: 32px 24px;
+    opacity: 1;
+    visibility: visible;
+    transition: none;
+  }
+
+  .auth-panel.is-active {
+    display: flex;
+    transition: none;
+    animation: auth-fade-in 400ms ease;
+  }
+
+  .auth-mobile-switch {
+    display: block;
+  }
+}
+
+/* Respect people who turn motion off */
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-overlay,
+  .auth-panel,
+  .auth-panel.is-active,
+  .auth-overlay-content,
+  .auth-overlay-content.is-active,
+  .auth-ghost-button {
+    transition: none;
+  }
+
+  .auth-panel.is-active {
+    animation: none;
+  }
+}
+
 .empty-state {
   padding: 48px 24px;
   background: var(--color-background);
