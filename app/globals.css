@@ -359,6 +359,7 @@ button {
 
 .new-label {
   display: inline-block;
+  align-self: flex-start;
   margin-top: 12px;
   padding: 5px 8px;
   background: var(--color-accent);
