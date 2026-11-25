@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import type { CSSProperties } from "react";
 
@@ -74,7 +73,7 @@ export default function Book3D({
               <p className="plate-brand">Marginalia</p>
               <p className="plate-title">Ex libris</p>
               <span className="plate-rule" />
-              <p className="plate-note">This book belongs to a curious reader.</p>
+              <p className="plate-note">This book belongs to a potential bibliophile...</p>
             </div>
           </div>
 

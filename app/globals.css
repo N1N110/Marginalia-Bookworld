@@ -828,6 +828,209 @@ button {
   transform: translateY(-4px);
 }
 
+/* =========================================================
+   STANDING BOOKS ON THE SHELF (components/BookCard.tsx)
+   Books, bundles and accessories share one standing-book shape:
+   fixed 2:3 proportions, a crease near the spine, a strip of
+   paper on the right edge and a soft shadow underneath.
+========================================================= */
+
+/* The top padding is a "headroom" band. Pens, tabs and ribbons poke up
+   into it. Every card has it, so all covers line up across a row. */
+.cover-link {
+  display: block;
+  padding: 28px 0 6px;
+}
+
+.cover-stand {
+  position: relative;
+  isolation: isolate;
+  width: 78%;
+  border-radius: 2px 5px 5px 2px;
+  box-shadow: 10px 14px 16px -8px rgba(53, 38, 41, 0.5);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.cover-link:hover .cover-stand {
+  transform: translateY(-4px);
+  box-shadow: 12px 20px 20px -8px rgba(53, 38, 41, 0.5);
+}
+
+/* The image is forced into a 2:3 box; object-fit crops anything extra */
+.cover-stand img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 2px 5px 5px 2px;
+}
+
+/* Crease near the spine and a faint gloss, painted over the cover */
+.cover-stand::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: 2px 5px 5px 2px;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.3) 0,
+      rgba(255, 255, 255, 0.2) 2.5%,
+      rgba(0, 0, 0, 0.1) 5%,
+      transparent 11%
+    ),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent 40%);
+  pointer-events: none;
+}
+
+/* Strip of stacked paper on the right edge */
+.cover-stand::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  right: -4px;
+  bottom: 3px;
+  z-index: 0;
+  width: 4px;
+  border-radius: 0 2px 2px 0;
+  background: repeating-linear-gradient(0deg, #f6ede2 0 1px, #e2d3c0 1px 2px);
+}
+
+/* ACCESSORIES: a ribbon bookmark peeks out of the top of the book */
+.cover-ribbon {
+  position: absolute;
+  top: -8%;
+  left: 60%;
+  z-index: 0;
+  width: 20%;
+  height: 22%;
+  border-radius: 2px;
+  background: #ecd9c3
+    repeating-linear-gradient(0deg, #e6b8c4 0 6px, transparent 6px 14px);
+  box-shadow: 0 2px 4px rgba(53, 38, 41, 0.25);
+}
+
+.cover-ribbon::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: #f6ede2;
+  box-shadow: 0 0 0 1px #d6c1a8;
+}
+
+/* BUNDLES: a book-shaped kraft parcel tied with twine.
+   Pens and sticky tabs sit behind the paper, so they look tucked in. */
+.cover-stand--bundle {
+  aspect-ratio: 2 / 3;
+}
+
+.bundle-pen {
+  position: absolute;
+  top: -8%;
+  z-index: 0;
+  width: 7%;
+  height: 30%;
+  border-radius: 999px;
+}
+
+.bundle-pen--sage {
+  left: 14%;
+  background: #8fb48a;
+}
+
+.bundle-pen--teal {
+  left: 25%;
+  background: #3f7f7a;
+}
+
+.bundle-tabs {
+  position: absolute;
+  top: -5%;
+  right: 12%;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 26%;
+}
+
+.bundle-tabs i {
+  display: block;
+  height: 7px;
+  border-radius: 1px;
+}
+
+.bundle-tabs i:nth-child(1) {
+  background: #9ccfe0;
+}
+
+.bundle-tabs i:nth-child(2) {
+  background: #f0b6c1;
+}
+
+.bundle-tabs i:nth-child(3) {
+  background: #cfe3b5;
+}
+
+.bundle-body {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 2px 5px 5px 2px;
+  background: #cba67a;
+}
+
+.bundle-fold {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 52%;
+  background: #b58f5c;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.bundle-twine {
+  position: absolute;
+  top: 60%;
+  right: 0;
+  left: 0;
+  height: 5px;
+  background: repeating-linear-gradient(90deg, #a98652 0 3px, #d6bd8c 3px 6px);
+}
+
+.bundle-label {
+  position: absolute;
+  right: 8%;
+  bottom: 8%;
+  left: 12%;
+  padding: 8px 6px;
+  border-radius: 2px;
+  background: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  line-height: 1.2;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover-stand {
+    transition: none;
+  }
+}
+
 .product-image {
   display: block;
   width: 100%;
