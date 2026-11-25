@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { products } from "../../../data/products";
 import AddToCartButton from "../../../components/AddToCartButton";
+import Book3D from "../../../components/Book3D";
 import { Suspense } from "react";
 
 
@@ -58,13 +59,32 @@ async function ProductContent({
     { label: "Language", value: specs?.language },
   ].filter((item) => item.value);
 
+  // Bundles and accessories are photos of objects, not book covers,
+  // so only real books get the 3D treatment.
+  const isBook = book.category !== "Bundles" && book.category !== "Accessories";
+
+  // Page count as a number, used to decide how thick the 3D book looks
+  const pageCount = parseInt(String(specs?.pages ?? ""), 10);
+
 
   return (
 
     <section className="section page-container product-layout">
 
-      <div className="product-cover">
-        {book.image ? (
+      <div
+        className={`product-cover${
+          book.image && isBook ? " product-cover--book" : ""
+        }`}
+      >
+        {book.image && isBook ? (
+          <Book3D
+            title={book.title}
+            author={book.author}
+            image={book.image}
+            pages={Number.isNaN(pageCount) ? undefined : pageCount}
+            catalogueNo={catalogueNo}
+          />
+        ) : book.image ? (
           <img
             src={book.image}
             alt={`Cover of ${book.title}`}

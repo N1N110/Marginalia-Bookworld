@@ -837,6 +837,341 @@ button {
   border-radius: var(--radius-card);
 }
 
+/* =========================================================
+   3D BOOK VIEWER (components/Book3D.tsx)
+   -----------------------------------------------------
+   Everything below is plain CSS. No 3D library is used.
+
+   The three ideas that make it work:
+   1. perspective on .book-scene   -> gives depth, like a camera lens
+   2. transform-style: preserve-3d -> lets child faces live in 3D space
+   3. rotateX/rotateY/translateZ   -> places each face of the box
+
+   Three size variables control the whole book:
+     --book-w  width of the cover (height is always 1.5x, a 2:3 book)
+     --book-h  height of the cover
+     --book-d  thickness. The component sets this from the page count.
+========================================================= */
+
+/* The book viewer needs the full column width so the open book fits.
+   (Flat product images stay capped at 380px as before.) */
+.product-cover.product-cover--book {
+  max-width: none;
+}
+
+.book-viewer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* THE STAGE: the "camera" that looks at the book */
+.book-scene {
+  /* Closed book width. Capped at 250px, and shrinks on narrower screens so
+     the OPEN book (two covers wide) always fits inside its column. */
+  --book-w: min(250px, calc((100vw - 120px) / 4));
+  --book-h: calc(var(--book-w) * 1.5);
+
+  position: relative;
+  isolation: isolate; /* keeps the floor shadow behind the book */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: calc(var(--book-h) + 70px); /* spare room so the tilt isn't clipped */
+  perspective: 1600px; /* smaller = stronger 3D, larger = flatter */
+  perspective-origin: 50% 35%; /* camera sits slightly above the middle */
+}
+
+/* THE BOOK: an invisible box that the six faces are attached to */
+.book3d {
+  position: relative;
+  z-index: 1;
+  width: var(--book-w);
+  height: var(--book-h);
+  transform-style: preserve-3d; /* faces keep their own 3D positions */
+  /* Closed: turned 24deg so the spine shows, tipped 6deg so the top shows.
+     translateX(0) is only here so the open state animates smoothly. */
+  transform: translateX(0) rotateX(-6deg) rotateY(24deg);
+  transition: transform 900ms cubic-bezier(0.5, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+/* Closed + hovered: the book turns a little toward you */
+.book-scene:not(.is-open) .book3d:hover {
+  transform: translateX(0) rotateX(-6deg) rotateY(14deg);
+}
+
+/* Open: slide right by half a cover so the open spread sits centered,
+   and turn face-on so both pages can be read. */
+.book-scene.is-open .book3d {
+  transform: translateX(calc(var(--book-w) / 2)) rotateX(-4deg) rotateY(0deg);
+}
+
+/* THE COVER: swings open like a door.
+   transform-origin: left center puts the hinge on the spine edge.
+   translateZ lifts it to the front of the box (half the thickness).
+   rotateY(-180deg) swings it over to the left, inside face showing. */
+.book3d-cover {
+  position: absolute;
+  inset: 0;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transform: translateZ(calc(var(--book-d) / 2)) rotateY(0deg);
+  transition: transform 900ms cubic-bezier(0.5, 0, 0.2, 1);
+}
+
+.book-scene.is-open .book3d-cover {
+  transform: translateZ(calc(var(--book-d) / 2)) rotateY(-180deg);
+}
+
+/* Both sides of the cover are hidden when they face away from you
+   (backface-visibility), so you only ever see the correct side. */
+.book3d-cover-front,
+.book3d-cover-inside {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Outside of the cover: the image */
+.book3d-cover-front {
+  border-radius: 2px 6px 6px 2px;
+  background: var(--color-primary);
+}
+
+/* THE ASPECT RATIO FIX: every cover is forced into the same 2:3 box.
+   object-fit: cover fills the box and crops any overflow, so a square
+   or oddly shaped image still becomes a proper book cover. */
+.book3d-cover-front img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* A soft crease near the spine and a faint gloss, painted over the image */
+.book3d-cover-front::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.3) 0,
+      rgba(255, 255, 255, 0.2) 2.5%,
+      rgba(0, 0, 0, 0.1) 5%,
+      transparent 11%
+    ),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent 40%);
+  pointer-events: none;
+}
+
+/* Inside of the cover (the LEFT page when open).
+   It is pre-rotated 180deg so it faces the right way once the cover swings. */
+.book3d-cover-inside {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--book-w) * 0.1);
+  border-radius: 6px 2px 2px 6px;
+  background:
+    linear-gradient(270deg, rgba(53, 38, 41, 0.16), transparent 12%), #f4e9dd;
+  text-align: center;
+}
+
+/* TITLE PAGE (the RIGHT page when open).
+   Sits 2px behind the cover, so the cover hides it while closed. */
+.book3d-titlepage {
+  position: absolute;
+  inset: 0;
+  transform: translateZ(calc(var(--book-d) / 2 - 2px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--book-w) * 0.1);
+  border-radius: 2px 6px 6px 2px;
+  background:
+    linear-gradient(90deg, rgba(53, 38, 41, 0.16), transparent 12%), #fffaf3;
+  text-align: center;
+}
+
+/* Text on both pages scales with the book width, so it works at any size */
+.plate-brand,
+.titlepage-brand {
+  margin: 0;
+  color: var(--color-secondary);
+  font-size: calc(var(--book-w) * 0.042);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.plate-title {
+  margin: calc(var(--book-w) * 0.04) 0;
+  font-family: var(--font-heading);
+  font-size: calc(var(--book-w) * 0.12);
+  font-style: italic;
+  line-height: 1.2;
+}
+
+.titlepage-title {
+  margin: calc(var(--book-w) * 0.05) 0;
+  font-family: var(--font-heading);
+  font-size: calc(var(--book-w) * 0.095);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.plate-rule {
+  display: block;
+  width: 36%;
+  height: 1px;
+  margin: calc(var(--book-w) * 0.03) 0;
+  background: var(--color-accent);
+}
+
+.plate-note,
+.titlepage-author {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: calc(var(--book-w) * 0.052);
+  line-height: 1.5;
+}
+
+.titlepage-author {
+  font-family: var(--font-heading);
+  font-size: calc(var(--book-w) * 0.065);
+  font-style: italic;
+}
+
+.titlepage-foot {
+  position: absolute;
+  bottom: calc(var(--book-w) * 0.07);
+  margin: 0;
+  color: var(--color-muted);
+  font-size: calc(var(--book-w) * 0.036);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* BACK COVER: turned around (rotateY 180deg) and pushed to the back */
+.book3d-back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg) translateZ(calc(var(--book-d) / 2));
+  border-radius: 6px 2px 2px 6px;
+  background: linear-gradient(135deg, #800020, #4a0013);
+}
+
+/* SPINE: as wide as the book is thick, standing on the left edge,
+   turned -90deg so it faces left. Title runs top to bottom. */
+.book3d-spine {
+  position: absolute;
+  top: 0;
+  left: calc(var(--book-d) / -2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--book-d);
+  height: 100%;
+  transform: rotateY(-90deg);
+  background: linear-gradient(90deg, #4a0013, #800020 50%, #4a0013);
+  color: var(--color-background);
+  font-family: var(--font-heading);
+  font-size: clamp(0.6rem, calc(var(--book-d) * 0.3), 0.85rem);
+  letter-spacing: 0.06em;
+}
+
+.book3d-spine span {
+  max-height: 88%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+}
+
+/* PAGE EDGE (right side): thin stripes imitate stacked paper */
+.book3d-pages-edge {
+  position: absolute;
+  top: 0;
+  left: calc(var(--book-w) - var(--book-d) / 2);
+  width: var(--book-d);
+  height: 100%;
+  transform: rotateY(90deg);
+  background: repeating-linear-gradient(90deg, #f6ede2 0 1px, #e2d3c0 1px 2px);
+}
+
+/* TOP and BOTTOM edges: the same paper stripes, turned 90deg */
+.book3d-top,
+.book3d-bottom {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: var(--book-d);
+  background: repeating-linear-gradient(0deg, #f6ede2 0 1px, #e2d3c0 1px 2px);
+}
+
+.book3d-top {
+  top: calc(var(--book-d) / -2);
+  transform: rotateX(90deg);
+}
+
+.book3d-bottom {
+  top: calc(100% - var(--book-d) / 2);
+  transform: rotateX(-90deg);
+}
+
+/* FLOOR SHADOW: a soft ellipse under the book. It widens when the
+   book opens so the book feels like it's resting on a surface. */
+.book-scene::after {
+  content: "";
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  z-index: 0;
+  width: calc(var(--book-w) * 1.15);
+  height: 24px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(53, 38, 41, 0.38) 0%,
+    transparent 70%
+  );
+  filter: blur(5px);
+  pointer-events: none;
+  transition: width 900ms cubic-bezier(0.5, 0, 0.2, 1);
+}
+
+.book-scene.is-open::after {
+  width: calc(var(--book-w) * 2.2);
+}
+
+/* Phones and tablets: the layout stacks, so the open book can use
+   almost the full screen width. Two covers wide must fit. */
+@media (max-width: 900px) {
+  .book-scene {
+    --book-w: min(250px, calc((100vw - 64px) / 2));
+  }
+}
+
+/* People who turn motion off: the book still opens, just instantly */
+@media (prefers-reduced-motion: reduce) {
+  .book3d,
+  .book3d-cover,
+  .book-scene::after {
+    transition: none;
+  }
+}
+
 /* BOOK SPECIFICATIONS: museum wall-label card */
 
 .product-specifications {
