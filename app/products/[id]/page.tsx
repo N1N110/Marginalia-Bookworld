@@ -39,6 +39,25 @@ async function ProductContent({
     notFound();
   }
 
+  const specs = book.specifications;
+
+  // Museum-style catalogue number, built from the book's position in the collection
+  const catalogueNo = String(
+    products.findIndex((item) => item.id === id) + 1
+  ).padStart(3, "0");
+
+  const highlightSpecs = [
+    { label: "Format", value: specs?.format },
+    { label: "Pages", value: specs?.pages },
+  ].filter((item) => item.value);
+
+  const detailSpecs = [
+    { label: "Publisher", value: specs?.publisher },
+    { label: "ISBN", value: specs?.isbn },
+    { label: "Publication Date", value: specs?.publicationDate },
+    { label: "Language", value: specs?.language },
+  ].filter((item) => item.value);
+
 
   return (
 
@@ -71,18 +90,36 @@ async function ProductContent({
         <AddToCartButton book={book}/>
 
 
-  {book.specifications && (
-    <div className="product-specifications">
-      <h2>Book Specifications</h2>
+        {book.specifications && (
+          <div className="product-specifications">
+            <div className="spec-header">
+              <p className="eyebrow">Catalogue entry</p>
+              <p className="spec-number">No. MG-{catalogueNo}</p>
+            </div>
 
-      <p><strong>Publisher:</strong> {book.specifications.publisher}</p>
-      <p><strong>ISBN:</strong> {book.specifications.isbn}</p>
-      <p><strong>Publication Date:</strong> {book.specifications.publicationDate}</p>
-      <p><strong>Format:</strong> {book.specifications.format}</p>
-      <p><strong>Language:</strong> {book.specifications.language}</p>
-      <p><strong>Pages:</strong> {book.specifications.pages}</p>
-    </div>
-  )}
+            <h2>Book Specifications</h2>
+
+            {highlightSpecs.length > 0 && (
+              <dl className="spec-highlights">
+                {highlightSpecs.map((item) => (
+                  <div key={item.label}>
+                    <dt className="spec-label">{item.label}</dt>
+                    <dd className="spec-value">{item.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+
+            <dl className="spec-list">
+              {detailSpecs.map((item) => (
+                <div className="spec-item" key={item.label}>
+                  <dt className="spec-label">{item.label}</dt>
+                  <dd className="spec-value">{item.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        )}
 
 
 
