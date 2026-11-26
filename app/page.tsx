@@ -11,7 +11,19 @@ export default function HomePage() {
 
       <section className="hero">
 
-     
+        <video
+        className="hero-video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        aria-hidden="true"
+        >
+          <source
+          src="/videos/burning-book.mp4"
+          type="video/mp4"
+          />
+        </video>
 
 
         <div className="page-container hero-content">
