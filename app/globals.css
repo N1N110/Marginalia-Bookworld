@@ -890,6 +890,13 @@ button {
   background: repeating-linear-gradient(0deg, #f6ede2 0 1px, #e2d3c0 1px 2px);
 }
 
+/* BUNDLES and ACCESSORIES keep their plain photo, but take exactly the
+   same size as a standing book so every card in a row matches. */
+.cover-link .cover-flat {
+  width: 78%;
+  aspect-ratio: 2 / 3;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cover-stand {
     transition: none;

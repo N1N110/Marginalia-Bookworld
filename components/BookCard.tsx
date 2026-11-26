@@ -14,11 +14,15 @@ export default function BookCard({ book }: BookCardProps) {
     <article className="book-card">
       {book.image ? (
         isFlatPhoto ? (
-          <Link href={`/products/${book.id}`}>
+          <Link
+            href={`/products/${book.id}`}
+            className="cover-link"
+            aria-label={`View ${book.title}`}
+          >
             <img
               src={book.image}
               alt={`Cover of ${book.title}`}
-              className="book-cover"
+              className="book-cover cover-flat"
             />
           </Link>
         ) : (
