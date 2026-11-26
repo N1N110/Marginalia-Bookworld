@@ -817,15 +817,6 @@ button {
   transform: translateY(-4px);
 }
 
-/* =========================================================
-   STANDING BOOKS ON THE SHELF (components/BookCard.tsx)
-   Books, bundles and accessories share one standing-book shape:
-   fixed 2:3 proportions, a crease near the spine, a strip of
-   paper on the right edge and a soft shadow underneath.
-========================================================= */
-
-/* The top padding is a "headroom" band. Pens, tabs and ribbons poke up
-   into it. Every card has it, so all covers line up across a row. */
 .cover-link {
   display: block;
   padding: 28px 0 6px;
@@ -890,8 +881,6 @@ button {
   background: repeating-linear-gradient(0deg, #f6ede2 0 1px, #e2d3c0 1px 2px);
 }
 
-/* BUNDLES and ACCESSORIES keep their plain photo, but take exactly the
-   same size as a standing book so every card in a row matches. */
 .cover-link .cover-flat {
   width: 78%;
   aspect-ratio: 2 / 3;
@@ -1230,8 +1219,6 @@ button {
   width: calc(var(--book-w) * 2.2);
 }
 
-/* Phones and tablets: the layout stacks, so the open book can use
-   almost the full screen width. Two covers wide must fit. */
 @media (max-width: 900px) {
   .book-scene {
     --book-w: min(250px, calc((100vw - 64px) / 2));
@@ -1246,8 +1233,6 @@ button {
     transition: none;
   }
 }
-
-/* BOOK SPECIFICATIONS: museum wall-label card */
 
 .product-specifications {
   position: relative;
