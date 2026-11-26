@@ -97,7 +97,7 @@ export default function ShopPage() {
             value={selectedCategory}
             onChange={(event) => setSelectedCategory(event.target.value)}
           >
-            <option value="All">All categories</option>
+            <option value="All">All</option>
             <option value="New Adult Romance">
               New Adult Romance
             </option>
@@ -132,7 +132,7 @@ export default function ShopPage() {
             value={maxPrice}
             onChange={(event) => setMaxPrice(event.target.value)}
           >
-            <option value="All">Any price</option>
+            <option value="All">Any</option>
             <option value="10">$10 and under</option>
             <option value="15">$15 and under</option>
             <option value="20">$20 and under</option>
@@ -151,7 +151,7 @@ export default function ShopPage() {
               setSelectedAvailability(event.target.value)
             }
           >
-            <option value="All">Any availability</option>
+            <option value="All">Any</option>
             <option value="In stock">In stock</option>
             <option value="Out of stock">Out of stock</option>
           </select>
