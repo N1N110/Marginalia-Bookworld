@@ -101,19 +101,7 @@ export default function HomePage() {
 
 
       <section className="section page-container signup-prompt">
- <video
-        className="hero-video"
-        autoPlay
-        muted
-        loop
-        playsInline
-        aria-hidden="true"
-        >
-          <source
-          src="/videos/burning-book.mp4"
-          type="video/mp4"
-          />
-        </video>
+
         <p className="eyebrow">Your next chapter starts here</p>
 
         <h2 className="section-heading">
