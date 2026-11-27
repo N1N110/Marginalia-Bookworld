@@ -355,7 +355,7 @@ button {
   margin-left: max(20px, calc((100% - var(--content-width)) / 2));
   margin-right: auto;
   padding: 40px;
-  background: rgba(250, 243, 241, 0.82);
+  background: rgba(217, 192, 164, 0.55);
   border-radius: 100px;
   box-shadow: 0 8px 30px rgba(35, 20, 20, 0.12);
   backdrop-filter: blur(2px);
