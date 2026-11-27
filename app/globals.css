@@ -297,7 +297,11 @@ button {
   max-width: 640px;
   margin-left: max(20px, calc((100% - var(--content-width)) / 2));
   margin-right: auto;
-  padding-block: 32px;
+  padding: 40px;
+  background: rgba(217, 192, 164, 0.55);
+  border-radius: var(--radius-card);
+  box-shadow: 0 8px 30px rgba(35, 20, 20, 0.12);
+  backdrop-filter: blur(2px);
 }
 
 .hero h1 {
@@ -306,16 +310,12 @@ button {
   font-size: clamp(2.6rem, 5vw, 4rem);
   line-height: 1.08;
   font-weight: 500;
-  color: #916130;
-  text-shadow:
-    0 2px 6px rgba(30, 18, 15, 0.55),
-    0 4px 14px rgba(30, 18, 15, 0.3);
+  color: var(--color-text);
 }
 
 .hero h1 em {
   color: #800020;
   font-weight: 500;
-  text-shadow: 0 2px 8px rgba(30, 18, 15, 0.55);
 }
 
 .hero {
@@ -324,15 +324,12 @@ button {
 
 .quotation,
 .hero-description {
-  color: var(--color-white);
+  color: var(--color-text);
   text-transform: uppercase;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.13em;
   line-height: 1.8;
-  text-shadow:
-    0 1px 4px rgba(20, 12, 12, 0.65),
-    0 2px 10px rgba(20, 12, 12, 0.35);
 }
 
 .hero-actions {
@@ -347,18 +344,6 @@ button {
   font-family: var(--font-heading);
   font-style: italic;
   color: var(--color-primary);
-  text-shadow: 0 2px 8px rgba(25, 15, 15, 0.4);
-}
-
-.hero-content {
-  max-width: 640px;
-  margin-left: max(20px, calc((100% - var(--content-width)) / 2));
-  margin-right: auto;
-  padding: 40px;
-  background: rgba(217, 192, 164, 0.55);
-  border-radius: 100px;
-  box-shadow: 0 8px 30px rgba(35, 20, 20, 0.12);
-  backdrop-filter: blur(2px);
 }
 
 /* =========================================================
