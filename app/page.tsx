@@ -20,7 +20,7 @@ export default function HomePage() {
         aria-hidden="true"
         >
           <source
-          src="/videos/burning-book.mp4"
+          src="/videos/reading-on-a-hammock.mp4"
           type="video/mp4"
           />
         </video>
