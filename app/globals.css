@@ -356,7 +356,7 @@ button {
   margin-right: auto;
   padding: 40px;
   background: rgba(250, 243, 241, 0.82);
-  border-radius: 600px;
+  border-radius: 100px;
   box-shadow: 0 8px 30px rgba(35, 20, 20, 0.12);
   backdrop-filter: blur(2px);
 }
